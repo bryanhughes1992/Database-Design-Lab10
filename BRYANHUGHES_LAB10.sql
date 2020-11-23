@@ -9,10 +9,43 @@
  */
 
 DELIMITER $$
+
 CREATE FUNCTION circleArea (
 	radius INT
 )
 RETURNS DECIMAL
 BEGIN
-	RETURN radius * 2 / PI();
+	RETURN (radius * 2) * PI();
 END; $$
+
+DELIMITER ;
+
+/*
+ * QUESTION #2
+ * Take two strings as your input parameters. 
+ * Concatenate them, starting with the longer 
+ * of the two strings. (Remember - there is 
+ * a built-in function for checking the length 
+ * of strings.)
+ */
+DELIMITER $$
+
+CREATE FUNCTION combineStrings( 
+	stringOne	VARCHAR(255),
+	stringTwo	VARCHAR(255)
+)
+RETURNS VARCHAR(255)
+BEGIN
+	IF (LENGTH(stringOne) > LENGTH(stringTwo))
+		THEN
+			RETURN CONCAT(stringOne, ' ', stringTwo);
+	ELSE
+		return CONCAT(stringTwo, ' ', stringOne);
+	END IF;	
+END $$
+DELIMITER ;
+
+SELECT combineStrings(Bryan, Hughes)
+FROM dual;
+
+
