@@ -214,3 +214,75 @@ BEGIN
 END; $$
 
 DELIMITER ;
+
+/* QUESTION #9
+ * Create a non-deterministic function that checks 
+ * to see if a date is Friday the 13th. If a null 
+ * argument is passed, it should check if today is 
+ * Friday the 13th.
+ */
+
+CREATE FUNCTION checkDate(
+	datePassed	DATE
+)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+	IF (datePassed IS NULL)
+		THEN
+			SET daysPassed = NOW();
+			IF (DAY(datePassed) = 'friday' AND EXTRACT(DAY FROM datePassed) = 13)
+				THEN
+					RETURN 1;
+			ELSE
+				RETURN 0;
+	ELSE IF (DAY(datePassed) = 'friday' AND EXTRACT(DAY FROM datePassed) = 13)
+		RETURN 1;
+	ELSE
+		RETURN 0;
+	END IF;
+END; $$
+
+DELIMITER ;
+
+/* QUESTION #10
+ * Create a function to format a date as 
+ * "{day name}, the {date}{ordinal indicator} of {month name}", 
+ * for example, today is "Wednesday, the 18th day of November". 
+ * You can use any built-in date functions except DATE_FORMAT(). 
+ * Remember to use the appropriate ordinal indicator for a given 
+ * number, i.e. 1st, 22nd, 23rd. 
+ */ 
+
+DELIMITER $$
+
+CREATE FUNCTION formatString(
+	day_Name	VARCHAR(255) 	DEFAULT	'Monday',
+	day_Number 	INT		DEFAULT 	1,
+	month_Name 	VARCHAR(255)	DEFAULT	'January'
+)
+RETURNS VARCHAR(255)
+DETERMINISTIC
+BEGIN
+	DECLARE formattedString VARCHAR(255);
+	IF (day_Number % 100 IN (11, 12, 13))
+		THEN
+			SET formattedString = CONCAT(day_Name, ", the ", day_Number, "th day of ", month_Name);
+	ELSE IF (day_Number % 10 = 1)
+		THEN
+			SET formattedString = CONCAT(day_Name, ", the ", day_Number, "st day of ", month_Name);
+	ELSE IF (day_Number % 10 = 2)
+		THEN
+			SET formattedString = CONCAT(day_Name, ", the ", day_Number, "nd day of ", month_Name);
+	ELSE IF (day_Number % 10 = 3)
+		THEN
+			SET formattedString = CONCAT(day_Name, ", the ", day_Number, "rd day of ", month_Name);
+	ELSE
+		SET formattedString = CONCAT(day_Name, ", the ", day_Number, "th day of ", month_Name);
+	END IF;
+  RETURN formattedString;		
+END; $$
+
+DELIMITER ;
+
+
